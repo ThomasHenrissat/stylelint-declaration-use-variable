@@ -5,9 +5,6 @@ var ruleName = 'sh-waqar/declaration-use-variable';
 var messages = stylelint.utils.ruleMessages(ruleName, {
     expected: function expected(property) {
         return 'Expected variable for \"' + property + '\".';
-    },
-    expectedPresent: function expectedPresent(property, variable) {
-        return 'Expected variable ' + variable + ' for \"' + property + '\".';
     }
 });
 
@@ -58,17 +55,6 @@ function checkValue(val, exceptions = []) {
     }
 
     return regEx.test(val);
-}
-
-/**
- * Checks the value and if its present in variables object
- * returns the respective variable
- * 
- * @param  {string}
- * @return {string|bool}
- */
-function checkPresentVariable(val) {
-    return variables[val] ? variables[val] : false;
 }
 
 /**
@@ -151,14 +137,7 @@ module.exports = stylelint.createPlugin(ruleName, function(config) {
         }
 
         root.walkDecls(function(statement) {
-            if (checkProp(statement.prop, statement.value, options.targets)  && checkPresentVariable(statement.value) && !checkValue(statement.value, options.ignoreValues)) {
-                stylelint.utils.report({
-                    ruleName: ruleName,
-                    result: result,
-                    node: statement,
-                    message: messages.expectedPresent(statement.prop, checkPresentVariable(statement.value))
-                });
-            } else if (checkProp(statement.prop, statement.value, options.targets) && !checkValue(statement.value, options.ignoreValues)) {
+            if (checkProp(statement.prop, statement.value, options.targets) && !checkValue(statement.value, options.ignoreValues)) {
                 stylelint.utils.report({
                     ruleName: ruleName,
                     result: result,
